@@ -20,7 +20,7 @@ const ideogramClient = new IdeogramClient(apiKey);
 const server = new Server(
   {
     name: "ideagram-mcp-server",
-    version: "0.1.0",
+    version: "0.2.0", // v3対応でバージョン更新
   },
   {
     capabilities: {
@@ -50,7 +50,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             model: {
               type: "string",
               description: "The model to use for generation",
-              enum: ["V_1", "V_1_TURBO", "V_2", "V_2_TURBO"]
+              enum: ["V_1", "V_1_TURBO", "V_2", "V_2_TURBO", "V_3", "V_3_TURBO", "V_3_DEFAULT", "V_3_QUALITY"]
             },
             magic_prompt_option: {
               type: "string",
@@ -70,6 +70,28 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
               description: "Number of images to generate (1-8)",
               minimum: 1,
               maximum: 8
+            },
+            style_reference: {
+              type: "object",
+              description: "Style reference options for Ideogram 3.0",
+              properties: {
+                urls: {
+                  type: "array",
+                  description: "URLs to reference images for style (max 3)",
+                  items: {
+                    type: "string"
+                  },
+                  maxItems: 3
+                },
+                style_code: {
+                  type: "string",
+                  description: "Style code to apply (alternative to URLs)"
+                },
+                random_style: {
+                  type: "boolean",
+                  description: "Whether to use a random style from Ideogram's library"
+                }
+              }
             }
           },
           required: ["prompt"]
@@ -94,7 +116,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const params: IdeogramGenerateParams = {
           prompt: args.prompt,
           aspect_ratio: typeof args.aspect_ratio === "string" ? args.aspect_ratio : undefined,
-          model: typeof args.model === "string" && ["V_1", "V_1_TURBO", "V_2", "V_2_TURBO"].includes(args.model) 
+          model: typeof args.model === "string" && ["V_1", "V_1_TURBO", "V_2", "V_2_TURBO", "V_3", "V_3_TURBO", "V_3_DEFAULT", "V_3_QUALITY"].includes(args.model) 
             ? args.model as IdeogramGenerateParams["model"]
             : undefined,
           magic_prompt_option: typeof args.magic_prompt_option === "string" && ["AUTO", "ON", "OFF"].includes(args.magic_prompt_option)
@@ -104,6 +126,27 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           negative_prompt: typeof args.negative_prompt === "string" ? args.negative_prompt : undefined,
           num_images: typeof args.num_images === "number" ? args.num_images : undefined,
         };
+
+        // Ideogram 3.0用のスタイルリファレンス機能
+        if (args.style_reference && typeof args.style_reference === "object") {
+          params.style_reference = {};
+          
+          // URLの配列が存在する場合
+          if (args.style_reference.urls && Array.isArray(args.style_reference.urls)) {
+            // 最大3つのURLに制限
+            params.style_reference.urls = args.style_reference.urls.slice(0, 3);
+          }
+          
+          // スタイルコードがある場合
+          if (typeof args.style_reference.style_code === "string") {
+            params.style_reference.style_code = args.style_reference.style_code;
+          }
+          
+          // ランダムスタイルの設定
+          if (typeof args.style_reference.random_style === "boolean") {
+            params.style_reference.random_style = args.style_reference.random_style;
+          }
+        }
 
         const response = await ideogramClient.generateImage(params);
 
