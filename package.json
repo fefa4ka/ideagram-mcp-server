@@ -1,7 +1,7 @@
 {
   "name": "@sunwood-ai-labs/ideagram-mcp-server",
-  "version": "0.1.0",
-  "description": "A Model Context Protocol server for Ideogram API",
+  "version": "0.2.0",
+  "description": "A Model Context Protocol server for Ideogram API with v3.0 support",
   "type": "module",
   "bin": {
     "ideagram-mcp-server": "./build/index.js"
@@ -17,7 +17,8 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "0.6.0",
-    "axios": "^1.7.9"
+    "axios": "^1.7.9",
+    "form-data": "^4.0.2"
   },
   "devDependencies": {
     "@types/node": "^20.11.24",
