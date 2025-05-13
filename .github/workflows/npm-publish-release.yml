@@ -29,8 +29,15 @@ jobs:
         id: get_version
         run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
+      - name: Remove 'v' prefix from version (if present)
+        id: clean_version
+        run: |
+          VERSION="${{ steps.get_version.outputs.VERSION }}"
+          CLEAN_VERSION="${VERSION#v}"
+          echo "CLEAN_VERSION=${CLEAN_VERSION}" >> $GITHUB_OUTPUT
+
       - name: Update version in package.json
-        run: npm version ${{ steps.get_version.outputs.VERSION }} --no-git-tag-version
+        run: npm version ${{ steps.clean_version.outputs.CLEAN_VERSION }} --no-git-tag-version
 
       - name: Build
         run: npm run build
