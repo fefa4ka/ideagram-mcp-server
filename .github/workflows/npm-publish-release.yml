@@ -4,6 +4,11 @@ on:
   release:
     types: [published] # GitHubでリリースが公開された時に実行
 
+# GitHub Actionsの権限設定
+permissions:
+  contents: read # リポジトリ内容への読み取り権限
+  packages: write # パッケージ公開の権限
+
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest

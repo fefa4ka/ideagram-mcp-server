@@ -5,6 +5,13 @@ on:
     branches:
       - main # mainブランチへのプッシュ時に実行
 
+
+# GitHub Actionsの権限設定
+permissions:
+  contents: write # リポジトリ内容（コミット、タグなど）への書き込み権限
+  issues: write   # Issueの作成権限
+  pull-requests: write # PRへのコメント権限
+
 jobs:
   semantic-release:
     runs-on: ubuntu-latest
