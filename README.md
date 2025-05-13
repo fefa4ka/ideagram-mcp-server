@@ -171,3 +171,31 @@ MIT
 3. 変更をコミット (`git commit -m '✨ feat: Add amazing feature'`)
 4. ブランチにプッシュ (`git push origin feature/amazing-feature`)
 5. プルリクエストを作成
+
+## 🚀 デプロイ
+
+このパッケージはGitHub Actionsを使用して自動的にnpmに公開されます。
+
+### 新バージョンの公開方法
+
+#### タグを使用して公開
+
+1. パッケージのバージョンを更新：
+   ```bash
+   npm version patch  # パッチバージョンを上げる
+   # または
+   npm version minor  # マイナーバージョンを上げる
+   # または
+   npm version major  # メジャーバージョンを上げる
+   ```
+
+2. タグをプッシュ：
+   ```bash
+   git push --follow-tags
+   ```
+
+これにより、GitHub Actionsが自動的に新しいバージョンをnpmに公開します。
+
+### 詳細情報
+
+デプロイの詳細な手順や設定については [デプロイドキュメント](./docs/npm-deploy.md) を参照してください。
