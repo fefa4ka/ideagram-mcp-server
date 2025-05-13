@@ -132,19 +132,20 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           const styleRef: IdeogramStyleReference = {};
           
           // URLの配列が存在する場合
-          if (args.style_reference.urls && Array.isArray(args.style_reference.urls)) {
+          const styleRefObj = args.style_reference as any;
+          if (styleRefObj.urls && Array.isArray(styleRefObj.urls)) {
             // 最大3つのURLに制限
-            styleRef.urls = args.style_reference.urls.slice(0, 3);
+            styleRef.urls = styleRefObj.urls.slice(0, 3);
           }
           
           // スタイルコードがある場合
-          if (typeof args.style_reference.style_code === "string") {
-            styleRef.style_code = args.style_reference.style_code;
+          if (typeof styleRefObj.style_code === "string") {
+            styleRef.style_code = styleRefObj.style_code;
           }
           
           // ランダムスタイルの設定
-          if (typeof args.style_reference.random_style === "boolean") {
-            styleRef.random_style = args.style_reference.random_style;
+          if (typeof styleRefObj.random_style === "boolean") {
+            styleRef.random_style = styleRefObj.random_style;
           }
           
           params.style_reference = styleRef;
