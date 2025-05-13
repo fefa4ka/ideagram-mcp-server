@@ -5,6 +5,7 @@ on:
     branches:
       - main # mainブランチへのプッシュ時に実行
 
+
 # GitHub Actionsの権限設定
 permissions:
   contents: write # リポジトリ内容（コミット、タグなど）への書き込み権限
