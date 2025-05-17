@@ -55,6 +55,28 @@ npm run build
 npm link
 ```
 
+## ⚡️ クイックスタート
+
+Claude Desktop や他の MCP クライアントで **最速** で Ideogram MCP Server を試すなら、  
+以下の JSON スニペットを設定ファイルにコピペするだけで OK だよ！✨
+
+> **npx で実行する場合**（推奨）  
+
+```json
+{
+  "mcpServers": {
+    "ideogram": {
+      "command": "npx",
+      "args": [
+        "@sunwood-ai-labs/ideagram-mcp-server"
+      ],
+      "env": {
+        "IDEOGRAM_API_KEY": "your_api_key_here"
+      }
+    }
+  }
+}
+```
 ## 💻 使用方法
 
 ### MCPツール
