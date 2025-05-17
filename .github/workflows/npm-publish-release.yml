@@ -1,0 +1,48 @@
+name: NPM Publish on Release
+
+on:
+  release:
+    types: [published] # GitHubでリリースが公開された時に実行
+
+# GitHub Actionsの権限設定
+permissions:
+  contents: read # リポジトリ内容への読み取り権限
+  packages: write # パッケージ公開の権限
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org/'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Get version from release
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Remove 'v' prefix from version (if present)
+        id: clean_version
+        run: |
+          VERSION="${{ steps.get_version.outputs.VERSION }}"
+          CLEAN_VERSION="${VERSION#v}"
+          echo "CLEAN_VERSION=${CLEAN_VERSION}" >> $GITHUB_OUTPUT
+
+      - name: Update version in package.json
+        run: npm version ${{ steps.clean_version.outputs.CLEAN_VERSION }} --no-git-tag-version
+
+      - name: Build
+        run: npm run build
+
+      - name: Publish to NPM
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

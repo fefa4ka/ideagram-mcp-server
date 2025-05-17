@@ -1,0 +1,35 @@
+name: NPM Publish
+
+on:
+  push:
+    tags:
+      - 'v*' # バージョンタグが作成された時に実行（例: v1.0.0, v0.2.1など）
+
+# GitHub Actionsの権限設定
+permissions:
+  contents: read # リポジトリ内容への読み取り権限
+  packages: write # パッケージ公開の権限
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org/'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Publish to NPM
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
