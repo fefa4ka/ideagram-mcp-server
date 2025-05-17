@@ -1,9 +1,7 @@
 name: NPM Publish
 
 on:
-  push:
-    tags:
-      - 'v*' # バージョンタグが作成された時に実行（例: v1.0.0, v0.2.1など）
+  workflow_dispatch:
 
 # GitHub Actionsの権限設定
 permissions:
