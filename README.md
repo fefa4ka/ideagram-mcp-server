@@ -1,4 +1,6 @@
+<p align="center">
 # 🎨 Ideogram MCP Server
+</p>
 
 <p align="center">
 <img alt="GitHub" src="https://img.shields.io/github/license/sunwood-ai-labs/ideagram-mcp-server">
@@ -9,27 +11,26 @@
 <img alt="npm" src="https://img.shields.io/npm/dt/@sunwood-ai-labs/ideagram-mcp-server">
 </p>
 
-
-Ideogram APIを使用して画像生成機能を提供するModel Context Protocol (MCP) サーバー。**Ideogram 3.0** に対応！
+<p align="center">
+Ideogram APIを使用して画像生成機能を提供するModel Context Protocol (MCP) サーバー。<b>Ideogram 3.0</b> に対応！
+</p>
 
 https://github.com/user-attachments/assets/041553d3-6fbc-4dfa-b149-d195dcb9e8f8
 
-
-
 ## 📋 機能
 
-- プロンプトに基づく画像生成
-- カスタマイズ可能なパラメータ
-  - アスペクト比
-  - モデル選択（V1, V2, **V3**）
-  - マジックプロンプト
-  - スタイルタイプ
-  - ネガティブプロンプト
-  - 生成画像数
-  - **スタイル参照機能**（Ideogram 3.0の新機能）
-    - URL参照画像（最大3枚）
-    - スタイルコード
-    - ランダムスタイル
+- ✨ プロンプトに基づく画像生成
+- 🔧 カスタマイズ可能なパラメータ
+  - 📐 アスペクト比
+  - 🚀 モデル選択（V1, V2, **V3**）
+  - ✨ マジックプロンプト
+  - 🎭 スタイルタイプ
+  - 🚫 ネガティブプロンプト
+  - 🔢 生成画像数
+  - 🖼️ **スタイル参照機能**（Ideogram 3.0の新機能）
+    - 🔗 URL参照画像（最大3枚）
+    - 🎨 スタイルコード
+    - 🎲 ランダムスタイル
 
 ## 🚀 セットアップ
 
@@ -138,6 +139,170 @@ const resultWithRandomStyle = await use_mcp_tool({
   }
 });
 ```
+
+## 🖥️ Claude Desktop での使用方法
+
+Claude Desktopでideagram-mcp-serverを使用するための設定手順です。
+
+### 📋 前提条件
+
+- Claude Desktop がインストールされていること
+- Node.js v16以上がインストールされていること
+- Ideogram API キーを取得していること
+
+### 🔧 セットアップ手順
+
+1. **インストール**:
+```bash
+# グローバルにインストール
+npm install -g @sunwood-ai-labs/ideagram-mcp-server
+
+# または、プロジェクト内にインストール
+npm install @sunwood-ai-labs/ideagram-mcp-server
+```
+
+2. **環境設定**:
+
+プロジェクトのルートディレクトリに `.env` ファイルを作成し、以下の内容を追加:
+```
+IDEOGRAM_API_KEY=your_ideogram_api_key_here
+```
+
+3. **サーバー起動**:
+```bash
+# グローバルインストールした場合
+ideagram-mcp-server
+
+# ローカルインストールした場合
+npx ideagram-mcp-server
+```
+
+4. **Claude Desktop の設定**:
+
+Claude Desktopを開き、以下の手順で設定します:
+
+- 設定メニュー（⚙️）を開く
+- 「外部ツール」または「拡張機能」セクションに移動
+- 「MCPツールを追加」をクリック
+- 以下の情報を入力:
+  - **名前**: Ideogram MCP
+  - **エンドポイント**: http://localhost:8080
+  - **説明**: Ideogram APIを使用した画像生成ツール
+
+**JSON設定ファイルを使用する方法**:
+
+Claude Desktopでは、JSON設定ファイルを使って直接MCPサーバーを設定することもできます。以下の手順に従ってください:
+
+1. Claude Desktopの設定ファイルを開く/作成する:
+   - **Windows**: `%AppData%\Claude\claude_desktop_config.json`
+   - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+   - **Linux**: `~/.config/Claude/claude_desktop_config.json`
+
+2. 以下のJSON設定を追加/編集する:
+```json
+{
+  "mcpServers": {
+    "ideogram": {
+      "command": "node",
+      "args": [
+        "/path/to/ideagram-mcp-server/build/index.js"
+      ],
+      "env": {
+        "IDEOGRAM_API_KEY": "your_api_key_here"
+      }
+    }
+  }
+}
+```
+
+設定例:
+
+- **npxで実行する場合**(推奨):
+```json
+{
+  "mcpServers": {
+    "ideogram": {
+      "command": "npx",
+      "args": [
+        "@sunwood-ai-labs/ideagram-mcp-server"
+      ],
+      "env": {
+        "IDEOGRAM_API_KEY": "your_api_key_here"
+      }
+    }
+  }
+}
+```
+
+- **特定のバージョンを指定する場合**:
+```json
+{
+  "mcpServers": {
+    "ideogram": {
+      "command": "npx",
+      "args": [
+        "@sunwood-ai-labs/ideagram-mcp-server@0.2.1"
+      ],
+      "env": {
+        "IDEOGRAM_API_KEY": "your_api_key_here"
+      }
+    }
+  }
+}
+```
+
+- **ローカルファイルを直接実行する場合**:
+  - **Mac/Linux**の場合:
+  ```json
+  {
+    "mcpServers": {
+      "ideogram": {
+        "command": "node",
+        "args": [
+          "/Users/username/ideagram-mcp-server/build/index.js"
+        ],
+        "env": {
+          "IDEOGRAM_API_KEY": "your_api_key_here"
+        }
+      }
+    }
+  }
+  ```
+
+  - **Windows**の場合:
+  ```json
+  {
+    "mcpServers": {
+      "ideogram": {
+        "command": "node",
+        "args": [
+          "C:\\Users\\username\\ideagram-mcp-server\\build\\index.js"
+        ],
+        "env": {
+          "IDEOGRAM_API_KEY": "your_api_key_here"
+        }
+      }
+    }
+  }
+  ```
+
+> **注意**: `/path/to/` や `username` の部分は実際のパスやユーザー名に置き換えてください。APIキーは直接環境変数として設定することもできますが、パス上に `.env` ファイルを配置することも可能です。
+
+5. **動作確認**:
+
+Claude Desktopのチャットで以下のようにツールを呼び出すことができます:
+```
+@Ideogram MCP generate_image
+プロンプト: 美しい山の夕焼け
+アスペクト比: ASPECT_16_9
+モデル: V_3_QUALITY
+```
+
+### 🔍 トラブルシューティング
+
+- **接続エラーが発生する場合**: サーバーが正しく起動しているか確認してください
+- **APIキーエラー**: `.env` ファイルが正しい場所にあり、有効なAPIキーが設定されていることを確認してください
+- **ポート競合**: デフォルトポート（8080）が他のアプリケーションと競合している場合は、起動時にポートを指定できます: `ideagram-mcp-server --port 8081`
 
 ## 🔧 開発
 
