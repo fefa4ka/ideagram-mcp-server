@@ -34,6 +34,8 @@ export interface IdeogramResponse {
     id: string;
     filepath?: string;
   }>;
+  /** 画像生成に使用したリクエストパラメータ */
+  request?: Record<string, unknown>;
 }
 
 export class IdeogramClient {
@@ -73,13 +75,36 @@ export class IdeogramClient {
   }
 
   async generateImage(params: IdeogramGenerateParams): Promise<IdeogramResponse> {
-     // デフォルト値を補完（未指定なら 1:1 & V_3）
+     // デフォルト値を補完（未指定なら 1x1）
      if (!params.aspect_ratio) {
-       params.aspect_ratio = 'ASPECT_1_1';
+       params.aspect_ratio = '1x1';
      }
-     if (!params.model) {
-       params.model = 'V_3';
+     // MagicPrompt をデフォルト ON
+     if (!params.magic_prompt_option) {
+       params.magic_prompt_option = 'ON';
      }
+
+     // Ideogram v3 エンドポイントは model ではなく rendering_speed を使用する
+     let rendering_speed: 'TURBO' | 'DEFAULT' | 'QUALITY' = 'DEFAULT';
+     if (params.model) {
+       switch (params.model) {
+         case 'V_3_TURBO':
+         case 'V_2_TURBO':
+         case 'V_1_TURBO':
+           rendering_speed = 'TURBO';
+           break;
+         case 'V_3_QUALITY':
+           rendering_speed = 'QUALITY';
+           break;
+         // V_3, V_2, V_1 などは DEFAULT
+         default:
+           rendering_speed = 'DEFAULT';
+       }
+       // API には model を送らない
+       delete (params as any).model;
+     }
+     // rendering_speed を明示的に追加
+     (params as any).rendering_speed = rendering_speed;
 
      try {
        // 参照画像がURLとして提供されている場合
@@ -123,8 +148,8 @@ export class IdeogramClient {
       
       // 通常のJSONリクエストまたはFormDataリクエストを送信
       const response = await axios.post(
-        `${this.baseUrl}/api/v3/generate`,
-        formData || { image_request: params },
+        `${this.baseUrl}/v1/ideogram-v3/generate`,
+        formData || params,
         requestConfig
       );
 
@@ -137,10 +162,17 @@ export class IdeogramClient {
       const updatedData = await Promise.all(downloadPromises);
       response.data.data = updatedData;
 
-      return response.data;
+      const result: IdeogramResponse = {
+        ...response.data,
+        request: { ...params }
+      };
+      return result;
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        throw new Error(`Ideogram API error: ${error.response?.data?.message || error.message}`);
+        const detail = typeof error.response?.data === 'string'
+          ? error.response.data
+          : JSON.stringify(error.response?.data, null, 2);
+        throw new Error(`Ideogram API error (${error.response?.status}): ${detail || error.message}`);
       }
       throw error;
     }
