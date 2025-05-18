@@ -1,70 +1,88 @@
-<p align="center">
+<div align="center">
 
-![](docs/ideogram-image_2025-05-18T06-31-45-777Z.png)
+  <img src="docs/ideogram-image_2025-05-18T06-31-45-777Z.png" alt="Ideogram MCP Server Header" width="60%" />
 
-# 🎨 Ideogram MCP Server
+  <h1>🎨 Ideogram MCP Server</h1>
 
-</p>
+  <p>
+    <img alt="GitHub" src="https://img.shields.io/github/license/sunwood-ai-labs/ideagram-mcp-server">
+    <img alt="GitHub package.json version" src="https://img.shields.io/github/package-json/v/sunwood-ai-labs/ideagram-mcp-server">
+    <img alt="GitHub issues" src="https://img.shields.io/github/issues/sunwood-ai-labs/ideagram-mcp-server">
+    <img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/sunwood-ai-labs/ideagram-mcp-server">
+    <img alt="npm" src="https://img.shields.io/npm/v/@sunwood-ai-labs/ideagram-mcp-server">
+    <img alt="npm" src="https://img.shields.io/npm/dt/@sunwood-ai-labs/ideagram-mcp-server">
+  </p>
 
-<p align="center">
-<img alt="GitHub" src="https://img.shields.io/github/license/sunwood-ai-labs/ideagram-mcp-server">
-<img alt="GitHub package.json version" src="https://img.shields.io/github/package-json/v/sunwood-ai-labs/ideagram-mcp-server">
-<img alt="GitHub issues" src="https://img.shields.io/github/issues/sunwood-ai-labs/ideagram-mcp-server">
-<img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/sunwood-ai-labs/ideagram-mcp-server">
-<img alt="npm" src="https://img.shields.io/npm/v/@sunwood-ai-labs/ideagram-mcp-server">
-<img alt="npm" src="https://img.shields.io/npm/dt/@sunwood-ai-labs/ideagram-mcp-server">
-</p>
+  <p>
+    Ideogram APIを使って画像生成を提供するModel Context Protocol (MCP) サーバーだよ！<br>
+    <b>Ideogram 3.0</b>対応で、Claude DesktopやMCPクライアントから爆速連携できるのが神✨
+  </p>
+</div>
 
-<p align="center">
-Ideogram APIを使用して画像生成機能を提供するModel Context Protocol (MCP) サーバー。<b>Ideogram 3.0</b> に対応！
-</p>
+---
 
-https://github.com/user-attachments/assets/041553d3-6fbc-4dfa-b149-d195dcb9e8f8
+## 📦 プロジェクト概要
 
-## 📋 機能
+- Ideogram API (v3.0) をMCPサーバー経由で使えるTypeScript製ツール
+- 画像生成・スタイル参照・マジックプロンプト・アスペクト比・モデル選択など多機能
+- Claude Desktopや他MCPクライアントから即利用OK
 
-- ✨ プロンプトに基づく画像生成
-- 🔧 カスタマイズ可能なパラメータ
-  - 📐 アスペクト比
-  - 🚀 モデル選択（V1, V2, **V3**）
-  - ✨ マジックプロンプト
-  - 🎭 スタイルタイプ
-  - 🚫 ネガティブプロンプト
-  - 🔢 生成画像数
-  - 🖼️ **スタイル参照機能**（Ideogram 3.0の新機能）
-    - 🔗 URL参照画像（最大3枚）
-    - 🎨 スタイルコード
-    - 🎲 ランダムスタイル
+---
+
+## 🗂️ ディレクトリ構成
+
+```plaintext
+ideagram-mcp-server/
+├── assets/
+├── docs/
+│   └── ideogram-image_2025-05-18T06-31-45-777Z.png
+├── src/
+│   ├── tools/
+│   ├── types/
+│   ├── utils/
+│   ├── ideogram-client.ts
+│   ├── index.ts
+│   ├── server.ts
+│   └── test.ts
+├── .env.example
+├── package.json
+├── tsconfig.json
+├── README.md
+└── ...（省略）
+```
+
+---
 
 ## 🚀 セットアップ
 
-1. 必要な依存関係をインストール:
-```bash
-npm install
-```
+1. **依存インストール**
+   ```bash
+   npm install
+   ```
 
-2. 環境変数の設定:
-`.env`ファイルを作成し、以下の内容を追加:
-```env
-IDEOGRAM_API_KEY=your_api_key_here
-```
+2. **環境変数設定**
+   - `.env`ファイルを作成し、下記を記入
+     ```
+     IDEOGRAM_API_KEY=your_api_key_here
+     # PORT=8081  # ポート変更したい場合のみ
+     ```
 
-3. ビルド:
-```bash
-npm run build
-```
+3. **ビルド**
+   ```bash
+   npm run build
+   ```
 
-4. （オプション）グローバルにインストール:
-```bash
-npm link
-```
+4. **（任意）グローバルインストール**
+   ```bash
+   npm link
+   ```
+
+---
 
 ## ⚡️ クイックスタート
 
-Claude Desktop や他の MCP クライアントで **最速** で Ideogram MCP Server を試すなら、  
-以下の JSON スニペットを設定ファイルにコピペするだけで OK だよ！✨
-
-> **npx で実行する場合**（推奨）  
+Claude Desktopや他MCPクライアントで爆速連携したいなら、  
+下記JSONスニペットを設定ファイルにコピペでOK！✨
 
 ```json
 {
@@ -81,315 +99,100 @@ Claude Desktop や他の MCP クライアントで **最速** で Ideogram MCP S
   }
 }
 ```
-## 💻 使用方法
 
-### MCPツール
+---
 
-#### generate_image
+## 🛠️ MCPツール仕様
 
-画像を生成するためのツール。
+### generate_image
 
-**必須パラメータ:**
-- `prompt`: 画像生成に使用するプロンプト
+#### パラメータ一覧（最新版）
 
-**オプションパラメータ:**
-- `aspect_ratio`: 画像のアスペクト比
-  - `ASPECT_1_1`
-  - `ASPECT_4_3`
-  - `ASPECT_3_4`
-  - `ASPECT_16_9`
-  - `ASPECT_9_16`
-- `model`: 使用するモデル
-  - `V_1`
-  - `V_1_TURBO`
-  - `V_2`
-  - `V_2_TURBO`
-  - `V_3`
-  - `V_3_TURBO`
-  - `V_3_DEFAULT`
-  - `V_3_QUALITY`
-- `magic_prompt_option`: マジックプロンプトの設定
-  - `AUTO`
-  - `ON`
-  - `OFF`
-- `style_type`: 生成スタイル
-- `negative_prompt`: 除外したい要素の説明
-- `num_images`: 生成する画像の数（1-8）
-- `style_reference`: スタイル参照オプション（Ideogram 3.0の新機能）
-  - `urls`: 参照画像のURL配列（最大3つ）
-  - `style_code`: スタイルコード
-  - `random_style`: ランダムスタイルを使用するかどうか（boolean）
+| パラメータ         | 型         | 説明                                                                                 | 必須/任意 | 備考                      |
+|--------------------|------------|--------------------------------------------------------------------------------------|-----------|---------------------------|
+| prompt             | string     | 画像生成プロンプト（英語推奨）                                                        | 必須      |                           |
+| aspect_ratio       | string     | アスペクト比（例: "1x1", "16x9", "4x3" など）                                        | 任意      | 15種類                    |
+| resolution         | string     | 解像度（公式ドキュメント参照、全69種）                                               | 任意      |                           |
+| seed               | integer    | 乱数シード（再現性担保用）                                                            | 任意      | 0～2147483647             |
+| magic_prompt       | string     | マジックプロンプト（"AUTO"|"ON"|"OFF"）                                               | 任意      | デフォルト"AUTO"          |
+| rendering_speed    | string     | v3用レンダリング速度（"TURBO"|"DEFAULT"|"QUALITY"）                                  | 任意      |                           |
+| style_codes        | string[]   | 8文字のスタイルコード配列                                                             | 任意      |                           |
+| style_type         | string     | スタイルタイプ（"AUTO"|"GENERAL"|"REALISTIC"|"DESIGN"）                              | 任意      |                           |
+| negative_prompt    | string     | 除外要素（英語推奨）                                                                  | 任意      |                           |
+| num_images         | number     | 生成画像数（1～8）                                                                    | 任意      |                           |
+| style_reference    | object     | スタイル参照（Ideogram 3.0新機能）                                                   | 任意      | 下記詳細                   |
+| └ urls             | string[]   | 参照画像URL配列（最大3つ）                                                            | 任意      |                           |
+| └ style_code       | string     | スタイルコード                                                                        | 任意      |                           |
+| └ random_style     | boolean    | ランダムスタイル使用                                                                  | 任意      |                           |
+| output_dir         | string     | 画像保存ディレクトリ（デフォルト: "docs"）                                            | 任意      |                           |
+| base_filename      | string     | 保存ファイル名のベース（デフォルト: "ideogram-image"）                                | 任意      | タイムスタンプ・ID付与     |
+| blur_mask          | boolean    | 画像の縁をぼかす（trueでマスク合成）                                                  | 任意      | デフォルト: false          |
 
-### 使用例
+#### 📝 使用例
 
 ```typescript
-// 基本的な使用例
 const result = await use_mcp_tool({
   server_name: "ideagram-mcp-server",
   tool_name: "generate_image",
   arguments: {
     prompt: "A beautiful sunset over mountains",
-    aspect_ratio: "ASPECT_16_9",
-    model: "V_3_QUALITY", // Ideogram 3.0の最高品質モデル
-    num_images: 1
-  }
-});
-
-// スタイル参照機能を使用する例
-const resultWithStyle = await use_mcp_tool({
-  server_name: "ideagram-mcp-server",
-  tool_name: "generate_image",
-  arguments: {
-    prompt: "A cat sitting on a window sill",
-    aspect_ratio: "ASPECT_1_1",
-    model: "V_3_DEFAULT",
+    aspect_ratio: "16x9",
+    rendering_speed: "QUALITY",
+    num_images: 2,
     style_reference: {
       urls: [
-        "https://example.com/reference_image1.jpg",
-        "https://example.com/reference_image2.jpg"
-      ]
-    }
-  }
-});
-
-// ランダムスタイルを使用する例
-const resultWithRandomStyle = await use_mcp_tool({
-  server_name: "ideagram-mcp-server",
-  tool_name: "generate_image",
-  arguments: {
-    prompt: "A futuristic cityscape",
-    model: "V_3_TURBO",
-    style_reference: {
-      random_style: true
-    }
+        "https://example.com/ref1.jpg",
+        "https://example.com/ref2.jpg"
+      ],
+      random_style: false
+    },
+    blur_mask: true
   }
 });
 ```
 
-## 🖥️ Claude Desktop での使用方法
+---
 
-Claude Desktopでideagram-mcp-serverを使用するための設定手順です。
+## 🧑‍💻 開発・ビルド・テスト
 
-### 📋 前提条件
+- `npm run build` ... TypeScriptビルド
+- `npm run watch` ... 開発モード（自動ビルド）
+- `npm run lint` ... コードリント
+- `npm test` ... テスト実行
 
-- Claude Desktop がインストールされていること
-- Node.js v16以上がインストールされていること
-- Ideogram API キーを取得していること
+---
 
-### 🔧 セットアップ手順
+## 📝 コントリビューション
 
-1. **インストール**:
+1. このリポジトリをフォーク
+2. 新ブランチ作成 (`git checkout -b feature/awesome`)
+3. 変更コミット（コミットメッセージは日本語＋絵文字推奨！）
+4. プッシュ＆プルリク作成
+
+---
+
+## 🚀 デプロイ & リリース
+
+- GitHub Actionsで自動npm公開
+- バージョン更新→タグpushで自動デプロイ
+
 ```bash
-# グローバルにインストール
-npm install -g @sunwood-ai-labs/ideagram-mcp-server
-
-# または、プロジェクト内にインストール
-npm install @sunwood-ai-labs/ideagram-mcp-server
+npm version patch|minor|major
+git push --follow-tags
 ```
 
-2. **環境設定**:
+詳細は [docs/npm-deploy.md](docs/npm-deploy.md) を参照！
 
-プロジェクトのルートディレクトリに `.env` ファイルを作成し、以下の内容を追加:
-```
-IDEOGRAM_API_KEY=your_ideogram_api_key_here
-```
-
-3. **サーバー起動**:
-```bash
-# グローバルインストールした場合
-ideagram-mcp-server
-
-# ローカルインストールした場合
-npx ideagram-mcp-server
-```
-
-4. **Claude Desktop の設定**:
-
-Claude Desktopを開き、以下の手順で設定します:
-
-- 設定メニュー（⚙️）を開く
-- 「外部ツール」または「拡張機能」セクションに移動
-- 「MCPツールを追加」をクリック
-- 以下の情報を入力:
-  - **名前**: Ideogram MCP
-  - **エンドポイント**: http://localhost:8080
-  - **説明**: Ideogram APIを使用した画像生成ツール
-
-**JSON設定ファイルを使用する方法**:
-
-Claude Desktopでは、JSON設定ファイルを使って直接MCPサーバーを設定することもできます。以下の手順に従ってください:
-
-1. Claude Desktopの設定ファイルを開く/作成する:
-   - **Windows**: `%AppData%\Claude\claude_desktop_config.json`
-   - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-   - **Linux**: `~/.config/Claude/claude_desktop_config.json`
-
-2. 以下のJSON設定を追加/編集する:
-```json
-{
-  "mcpServers": {
-    "ideogram": {
-      "command": "node",
-      "args": [
-        "/path/to/ideagram-mcp-server/build/index.js"
-      ],
-      "env": {
-        "IDEOGRAM_API_KEY": "your_api_key_here"
-      }
-    }
-  }
-}
-```
-
-設定例:
-
-- **npxで実行する場合**(推奨):
-```json
-{
-  "mcpServers": {
-    "ideogram": {
-      "command": "npx",
-      "args": [
-        "@sunwood-ai-labs/ideagram-mcp-server"
-      ],
-      "env": {
-        "IDEOGRAM_API_KEY": "your_api_key_here"
-      }
-    }
-  }
-}
-```
-
-- **特定のバージョンを指定する場合**:
-```json
-{
-  "mcpServers": {
-    "ideogram": {
-      "command": "npx",
-      "args": [
-        "@sunwood-ai-labs/ideagram-mcp-server@0.2.1"
-      ],
-      "env": {
-        "IDEOGRAM_API_KEY": "your_api_key_here"
-      }
-    }
-  }
-}
-```
-
-- **ローカルファイルを直接実行する場合**:
-  - **Mac/Linux**の場合:
-  ```json
-  {
-    "mcpServers": {
-      "ideogram": {
-        "command": "node",
-        "args": [
-          "/Users/username/ideagram-mcp-server/build/index.js"
-        ],
-        "env": {
-          "IDEOGRAM_API_KEY": "your_api_key_here"
-        }
-      }
-    }
-  }
-  ```
-
-  - **Windows**の場合:
-  ```json
-  {
-    "mcpServers": {
-      "ideogram": {
-        "command": "node",
-        "args": [
-          "C:\\Users\\username\\ideagram-mcp-server\\build\\index.js"
-        ],
-        "env": {
-          "IDEOGRAM_API_KEY": "your_api_key_here"
-        }
-      }
-    }
-  }
-  ```
-
-> **注意**: `/path/to/` や `username` の部分は実際のパスやユーザー名に置き換えてください。APIキーは直接環境変数として設定することもできますが、パス上に `.env` ファイルを配置することも可能です。
-
-5. **動作確認**:
-
-Claude Desktopのチャットで以下のようにツールを呼び出すことができます:
-```
-@Ideogram MCP generate_image
-プロンプト: 美しい山の夕焼け
-アスペクト比: ASPECT_16_9
-モデル: V_3_QUALITY
-```
-
-### 🔍 トラブルシューティング
-
-- **接続エラーが発生する場合**: サーバーが正しく起動しているか確認してください
-- **APIキーエラー**: `.env` ファイルが正しい場所にあり、有効なAPIキーが設定されていることを確認してください
-- **ポート競合**: デフォルトポート（8080）が他のアプリケーションと競合している場合は、起動時にポートを指定できます: `ideagram-mcp-server --port 8081`
-
-## 🔧 開発
-
-### ディレクトリ構造
-
-```
-ideagram-mcp-server/
-├── src/
-│   ├── index.ts          # メインのサーバーコード
-│   └── ideogram-client.ts # Ideogram APIクライアント
-├── package.json
-├── tsconfig.json
-└── README.md
-```
-
-### スクリプト
-
-- `npm run build`: TypeScriptのコンパイル
-- `npm run watch`: 開発モードでの実行（ファイル変更の監視）
-- `npm run lint`: コードのリント
-- `npm test`: テストの実行
+---
 
 ## 📄 ライセンス
 
 MIT
 
-## 🤝 コントリビューション
+---
 
-1. このリポジトリをフォーク
-2. 新しいブランチを作成 (`git checkout -b feature/amazing-feature`)
-3. 変更をコミット (`git commit -m '✨ feat: Add amazing feature'`)
-4. ブランチにプッシュ (`git push origin feature/amazing-feature`)
-5. プルリクエストを作成
-
-## 🚀 デプロイ
-
-このパッケージはGitHub Actionsを使用して自動的にnpmに公開されます。
-
-### 新バージョンの公開方法
-
-#### タグを使用して公開
-
-1. パッケージのバージョンを更新：
-   ```bash
-   npm version patch  # パッチバージョンを上げる
-   # または
-   npm version minor  # マイナーバージョンを上げる
-   # または
-   npm version major  # メジャーバージョンを上げる
-   ```
-
-2. タグをプッシュ：
-   ```bash
-   git push --follow-tags
-   ```
-
-これにより、GitHub Actionsが自動的に新しいバージョンをnpmに公開します。
-
-### 詳細情報
-
-デプロイの詳細な手順や設定については [デプロイドキュメント](./docs/npm-deploy.md) を参照してください。
-
+<div align="center">
 
 ![](assets/header-animation.svg)
+
+</div>
