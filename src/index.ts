@@ -44,22 +44,47 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             },
             aspect_ratio: {
               type: "string",
-              description: "The aspect ratio for the generated image",
-              enum: ["ASPECT_1_1", "ASPECT_4_3", "ASPECT_3_4", "ASPECT_16_9", "ASPECT_9_16"]
+              description: "The aspect ratio for the generated image (see official docs for all 15 values)",
+              enum: [
+                "1x1", "4x3", "3x4", "16x9", "9x16",
+                "2x3", "3x2", "5x4", "4x5", "21x9",
+                "9x21", "3x1", "1x3", "2x1", "1x2"
+              ]
             },
-            model: {
+            resolution: {
               type: "string",
-              description: "The model to use for generation",
-              enum: ["V_1", "V_1_TURBO", "V_2", "V_2_TURBO", "V_3", "V_3_TURBO", "V_3_DEFAULT", "V_3_QUALITY"]
+              description: "The resolution for the generated image (see official docs for all 69 values)",
             },
-            magic_prompt_option: {
+            seed: {
+              type: "integer",
+              description: "Random seed. Set for reproducible generation.",
+              minimum: 0,
+              maximum: 2147483647
+            },
+            magic_prompt: {
               type: "string",
               description: "Whether to use magic prompt",
               enum: ["AUTO", "ON", "OFF"]
             },
+            rendering_speed: {
+              type: "string",
+              description: "Rendering speed for v3 (TURBO/DEFAULT/QUALITY)",
+              enum: ["TURBO", "DEFAULT", "QUALITY"]
+            },
+            style_codes: {
+              type: "array",
+              description: "Array of 8-char style codes",
+              items: { type: "string" }
+            },
             style_type: {
               type: "string",
-              description: "The style type for generation"
+              description: "The style type for generation",
+              enum: ["AUTO", "GENERAL", "REALISTIC", "DESIGN"]
+            },
+            style_reference_images: {
+              type: "array",
+              description: "A set of images to use as style references (max 10MB, JPEG/PNG/WebP)",
+              items: { type: "string", format: "binary" }
             },
             negative_prompt: {
               type: "string",
@@ -116,13 +141,17 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const params: IdeogramGenerateParams = {
           prompt: args.prompt,
           aspect_ratio: typeof args.aspect_ratio === "string" ? args.aspect_ratio : undefined,
-          model: typeof args.model === "string" && ["V_1", "V_1_TURBO", "V_2", "V_2_TURBO", "V_3", "V_3_TURBO", "V_3_DEFAULT", "V_3_QUALITY"].includes(args.model) 
-            ? args.model as IdeogramGenerateParams["model"]
+          resolution: typeof args.resolution === "string" ? args.resolution : undefined,
+          seed: typeof args.seed === "number" ? args.seed : undefined,
+          magic_prompt: typeof args.magic_prompt === "string" && ["AUTO", "ON", "OFF"].includes(args.magic_prompt)
+            ? args.magic_prompt as IdeogramGenerateParams["magic_prompt"]
             : undefined,
-          magic_prompt_option: typeof args.magic_prompt_option === "string" && ["AUTO", "ON", "OFF"].includes(args.magic_prompt_option)
-            ? args.magic_prompt_option as IdeogramGenerateParams["magic_prompt_option"]
+          rendering_speed: typeof args.rendering_speed === "string" && ["TURBO", "DEFAULT", "QUALITY"].includes(args.rendering_speed)
+            ? args.rendering_speed as IdeogramGenerateParams["rendering_speed"]
             : undefined,
+          style_codes: Array.isArray(args.style_codes) ? args.style_codes : undefined,
           style_type: typeof args.style_type === "string" ? args.style_type : undefined,
+          style_reference_images: Array.isArray(args.style_reference_images) ? args.style_reference_images : undefined,
           negative_prompt: typeof args.negative_prompt === "string" ? args.negative_prompt : undefined,
           num_images: typeof args.num_images === "number" ? args.num_images : undefined,
         };

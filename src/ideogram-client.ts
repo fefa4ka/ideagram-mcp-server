@@ -11,15 +11,25 @@ export interface IdeogramStyleReference {
 }
 
 export interface IdeogramGenerateParams {
+  /** Generation prompt (English recommended) */
   prompt: string;
+  /** Aspect ratio enum (mutually exclusive with resolution) */
   aspect_ratio?: string;
+  /** Back-compat: old model param → internally mapped to rendering_speed */
   model?: 'V_1' | 'V_1_TURBO' | 'V_2' | 'V_2_TURBO' | 'V_3' | 'V_3_TURBO' | 'V_3_DEFAULT' | 'V_3_QUALITY';
+  /** Official v3 field */
+  rendering_speed?: 'TURBO' | 'DEFAULT' | 'QUALITY';
+  /** MagicPrompt control (AUTO / ON / OFF) */
+  magic_prompt?: 'AUTO' | 'ON' | 'OFF';
+  /** Deprecated alias kept for compatibility */
   magic_prompt_option?: 'AUTO' | 'ON' | 'OFF';
   seed?: number;
   style_type?: string;
   negative_prompt?: string;
   num_images?: number;
   resolution?: string;
+  /** Optional list of 8-char style codes */
+  style_codes?: string[];
   color_palette?: {
     name?: string;
     members?: Array<{ color: string; weight?: number }>;
@@ -79,13 +89,17 @@ export class IdeogramClient {
      if (!params.aspect_ratio) {
        params.aspect_ratio = '1x1';
      }
-     // MagicPrompt をデフォルト ON
-     if (!params.magic_prompt_option) {
-       params.magic_prompt_option = 'ON';
+     // MagicPrompt 統合 & デフォルト AUTO
+     if (params.magic_prompt_option && !params.magic_prompt) {
+       params.magic_prompt = params.magic_prompt_option;
+       delete (params as any).magic_prompt_option;
+     }
+     if (!params.magic_prompt) {
+       params.magic_prompt = 'AUTO';
      }
 
-     // Ideogram v3 エンドポイントは model ではなく rendering_speed を使用する
-     let rendering_speed: 'TURBO' | 'DEFAULT' | 'QUALITY' = 'DEFAULT';
+     // v3: rendering_speed を優先。model が指定されている場合は後方互換マッピング
+     let rendering_speed: 'TURBO' | 'DEFAULT' | 'QUALITY' = params.rendering_speed ?? 'DEFAULT';
      if (params.model) {
        switch (params.model) {
          case 'V_3_TURBO':
@@ -103,8 +117,11 @@ export class IdeogramClient {
        // API には model を送らない
        delete (params as any).model;
      }
-     // rendering_speed を明示的に追加
+     // request payload に rendering_speed を明示
      (params as any).rendering_speed = rendering_speed;
+     // クライアント内で model / rendering_speed の重複を排除
+     delete (params as any).model;
+     delete (params as any).rendering_speed_option; // 念のため
 
      try {
        // 参照画像がURLとして提供されている場合
