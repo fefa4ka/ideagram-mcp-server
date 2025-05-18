@@ -1,6 +1,6 @@
 <div align="center">
 
-  <img src="docs/ideogram-image_2025-05-18T06-31-45-777Z.png" alt="Ideogram MCP Server Header" width="60%" />
+![](docs/ideogram-image_2025-05-18T06-31-45-777Z.png)
 
   <h1>🎨 Ideogram MCP Server</h1>
 
@@ -29,55 +29,6 @@
 
 ---
 
-## 🗂️ ディレクトリ構成
-
-```plaintext
-ideagram-mcp-server/
-├── assets/
-├── docs/
-│   └── ideogram-image_2025-05-18T06-31-45-777Z.png
-├── src/
-│   ├── tools/
-│   ├── types/
-│   ├── utils/
-│   ├── ideogram-client.ts
-│   ├── index.ts
-│   ├── server.ts
-│   └── test.ts
-├── .env.example
-├── package.json
-├── tsconfig.json
-├── README.md
-└── ...（省略）
-```
-
----
-
-## 🚀 セットアップ
-
-1. **依存インストール**
-   ```bash
-   npm install
-   ```
-
-2. **環境変数設定**
-   - `.env`ファイルを作成し、下記を記入
-     ```
-     IDEOGRAM_API_KEY=your_api_key_here
-     # PORT=8081  # ポート変更したい場合のみ
-     ```
-
-3. **ビルド**
-   ```bash
-   npm run build
-   ```
-
-4. **（任意）グローバルインストール**
-   ```bash
-   npm link
-   ```
-
----
 
 ## ⚡️ クイックスタート
 
@@ -99,6 +50,7 @@ Claude Desktopや他MCPクライアントで爆速連携したいなら、
   }
 }
 ```
+
 
 ---
 
@@ -159,6 +111,30 @@ const result = await use_mcp_tool({
 - `npm run watch` ... 開発モード（自動ビルド）
 - `npm run lint` ... コードリント
 - `npm test` ... テスト実行
+
+---
+
+## 🗂️ ディレクトリ構成
+
+```bash
+ideagram-mcp-server/
+├── assets/
+├── docs/
+│   └── ideogram-image_2025-05-18T06-31-45-777Z.png
+├── src/
+│   ├── tools/
+│   ├── types/
+│   ├── utils/
+│   ├── ideogram-client.ts
+│   ├── index.ts
+│   ├── server.ts
+│   └── test.ts
+├── .env.example
+├── package.json
+├── tsconfig.json
+├── README.md
+└── ...（省略）
+```
 
 ---
 
