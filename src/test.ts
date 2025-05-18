@@ -13,8 +13,24 @@ async function main() {
   };
 
   try {
+    // デフォルト保存先・ファイル名
     const result = await client.generateImage(params);
+    console.log("Result full:", result); // 返り血（返り値）の中身も全部表示！ギャルチェック✨
     console.log("Test Success! Generated images:", result.data.map(d => d.filepath));
+
+    // 保存先・ファイル名を指定したパターン
+    const customDir = "images";
+    const customBase = "my-cat";
+    const resultCustom = await client.generateImage(
+      params,
+      customDir,
+      customBase
+    );
+    console.log("Result (custom dir/name):", resultCustom);
+    console.log(
+      `Test Success! Custom saved images:`,
+      resultCustom.data.map(d => d.filepath)
+    );
   } catch (err) {
     console.error("Test Failed:", err);
     process.exit(1);
