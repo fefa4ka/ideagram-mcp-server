@@ -9,25 +9,43 @@ import { IdeogramStyleReference, IdeogramGenerateParams, IdeogramResponse } from
 export class IdeogramClient {
   private readonly apiKey: string;
   private readonly baseUrl = 'https://api.ideogram.ai';
-  private readonly outputDir: string;
+  private readonly defaultOutputDir: string;
 
   constructor(apiKey: string, outputDir?: string) {
     if (!apiKey) {
       throw new Error('IDEOGRAM_API_KEY is required');
     }
     this.apiKey = apiKey;
-    this.outputDir = outputDir || path.join(process.cwd(), 'generated_images');
-    
-    // 出力ディレクトリが存在しない場合は作成
-    if (!fs.existsSync(this.outputDir)) {
-      fs.mkdirSync(this.outputDir, { recursive: true });
-    }
+    this.defaultOutputDir = outputDir || path.join(process.cwd(), 'docs');
+    // ディレクトリは必要に応じて後で作成
   }
 
-  private async downloadImage(url: string, id: string): Promise<string> {
+  /**
+   * 画像をダウンロードして保存する
+   * @param url 画像URL
+   * @param id 画像ID
+   * @param outputDir 保存先ディレクトリ（省略時はdefaultOutputDir）
+   * @param baseFilename ベースファイル名（省略時は"ideogram-image"）
+   * @returns 保存したファイルのパス
+   */
+  private async downloadImage(
+    url: string,
+    id: string,
+    outputDir?: string,
+    baseFilename?: string
+  ): Promise<string> {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const filename = `${timestamp}_${id}.png`;
-    const filepath = path.join(this.outputDir, filename);
+    const base = baseFilename || 'ideogram-image';
+    // idがundefined/null/空文字ならファイル名から除外
+    const idPart = (typeof id === "string" && id.trim() !== "" && id !== "undefined") ? `_${id}` : "";
+    const filename = `${base}_${timestamp}${idPart}.png`;
+    const dir = outputDir || this.defaultOutputDir;
+
+    // ディレクトリがなければ作成
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    const filepath = path.join(dir, filename);
 
     return new Promise((resolve, reject) => {
       https.get(url, (response) => {
@@ -42,7 +60,17 @@ export class IdeogramClient {
     });
   }
 
-  async generateImage(params: IdeogramGenerateParams): Promise<IdeogramResponse> {
+  /**
+   * 画像生成API呼び出し
+   * @param params 生成パラメータ
+   * @param outputDir 保存先ディレクトリ（省略時はdefaultOutputDir）
+   * @param baseFilename ベースファイル名（省略時は"ideogram-image"）
+   */
+  async generateImage(
+    params: IdeogramGenerateParams,
+    outputDir?: string,
+    baseFilename?: string
+  ): Promise<IdeogramResponse> {
      // デフォルト値を補完（未指定なら 1x1）
      if (!params.aspect_ratio) {
        params.aspect_ratio = '1x1';
@@ -130,10 +158,15 @@ export class IdeogramClient {
 
       // 画像を自動保存
       const downloadPromises = response.data.data.map(async (img: { url: string; id: string }) => {
-        const filepath = await this.downloadImage(img.url, img.id);
+        const filepath = await this.downloadImage(
+          img.url,
+          img.id,
+          outputDir,
+          baseFilename
+        );
         return { ...img, filepath };
       });
-      
+
       const updatedData = await Promise.all(downloadPromises);
       response.data.data = updatedData;
 
