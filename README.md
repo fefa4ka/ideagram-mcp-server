@@ -1,5 +1,7 @@
 <p align="center">
+
 # 🎨 Ideogram MCP Server
+
 </p>
 
 <p align="center">
