@@ -4,3 +4,8 @@ build/
 .env*
 generated_test_images/
 generated_images/
+
+.SourceSageAssets/
+.SourceSageAssets/DOCUMIND/Repository_summary.md
+docs/*.png
+images/
