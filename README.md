@@ -1,6 +1,6 @@
 <div align="center">
 
-  <img src="docs/ideogram-image_2025-05-18T06-31-45-777Z.png" alt="Ideogram MCP Server Header" width="60%" />
+![](docs/ideogram-image_2025-05-18T06-31-45-777Z.png)
 
   <h1>🎨 Ideogram MCP Server</h1>
 
