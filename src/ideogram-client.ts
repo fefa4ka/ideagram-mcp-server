@@ -77,6 +77,10 @@ export class IdeogramClient {
      if (!params.aspect_ratio) {
        params.aspect_ratio = '1x1';
      }
+     // MagicPrompt をデフォルト ON
+     if (!params.magic_prompt_option) {
+       params.magic_prompt_option = 'ON';
+     }
 
      // Ideogram v3 エンドポイントは model ではなく rendering_speed を使用する
      let rendering_speed: 'TURBO' | 'DEFAULT' | 'QUALITY' = 'DEFAULT';
