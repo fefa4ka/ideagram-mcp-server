@@ -88,6 +88,10 @@ export const generateImageInputSchema = {
     base_filename: {
       type: "string",
       description: "Base filename for saved images (default: 'ideogram-image'). Timestamp and image ID will be appended automatically."
+    },
+    blur_mask: {
+      type: "boolean",
+      description: "Apply a blurred mask to the image edges (using a fixed mask image). If true, the output image will have blurred/feathered edges. (default: false)"
     }
   },
   required: ["prompt"]

@@ -1,10 +1,8 @@
 import axios from 'axios';
-import * as fs from 'fs';
 import * as path from 'path';
-import * as https from 'https';
 import FormData from 'form-data';
-
 import { IdeogramStyleReference, IdeogramGenerateParams, IdeogramResponse } from './types/ideogram.js';
+import { downloadAndBlurMaskImage } from './utils/imageMaskBlur.js';
 
 export class IdeogramClient {
   private readonly apiKey: string;
@@ -17,47 +15,6 @@ export class IdeogramClient {
     }
     this.apiKey = apiKey;
     this.defaultOutputDir = outputDir || path.join(process.cwd(), 'docs');
-    // ディレクトリは必要に応じて後で作成
-  }
-
-  /**
-   * 画像をダウンロードして保存する
-   * @param url 画像URL
-   * @param id 画像ID
-   * @param outputDir 保存先ディレクトリ（省略時はdefaultOutputDir）
-   * @param baseFilename ベースファイル名（省略時は"ideogram-image"）
-   * @returns 保存したファイルのパス
-   */
-  private async downloadImage(
-    url: string,
-    id: string,
-    outputDir?: string,
-    baseFilename?: string
-  ): Promise<string> {
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const base = baseFilename || 'ideogram-image';
-    // idがundefined/null/空文字ならファイル名から除外
-    const idPart = (typeof id === "string" && id.trim() !== "" && id !== "undefined") ? `_${id}` : "";
-    const filename = `${base}_${timestamp}${idPart}.png`;
-    const dir = outputDir || this.defaultOutputDir;
-
-    // ディレクトリがなければ作成
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
-    const filepath = path.join(dir, filename);
-
-    return new Promise((resolve, reject) => {
-      https.get(url, (response) => {
-        const fileStream = fs.createWriteStream(filepath);
-        response.pipe(fileStream);
-        fileStream.on('finish', () => {
-          fileStream.close();
-          resolve(filepath);
-        });
-        fileStream.on('error', reject);
-      }).on('error', reject);
-    });
   }
 
   /**
@@ -65,11 +22,13 @@ export class IdeogramClient {
    * @param params 生成パラメータ
    * @param outputDir 保存先ディレクトリ（省略時はdefaultOutputDir）
    * @param baseFilename ベースファイル名（省略時は"ideogram-image"）
+   * @param blurMask 画像の淵をぼかすかどうか
    */
   async generateImage(
     params: IdeogramGenerateParams,
     outputDir?: string,
-    baseFilename?: string
+    baseFilename?: string,
+    blurMask?: boolean
   ): Promise<IdeogramResponse> {
      // デフォルト値を補完（未指定なら 1x1）
      if (!params.aspect_ratio) {
@@ -158,11 +117,12 @@ export class IdeogramClient {
 
       // 画像を自動保存
       const downloadPromises = response.data.data.map(async (img: { url: string; id: string }) => {
-        const filepath = await this.downloadImage(
+        const filepath = await downloadAndBlurMaskImage(
           img.url,
           img.id,
           outputDir,
-          baseFilename
+          baseFilename,
+          blurMask // 追加
         );
         return { ...img, filepath };
       });
