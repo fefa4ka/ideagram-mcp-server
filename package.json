@@ -1,6 +1,6 @@
 {
   "name": "@sunwood-ai-labs/ideagram-mcp-server",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "description": "A Model Context Protocol server for Ideogram API with v3.0 support",
   "type": "module",
   "bin": {
