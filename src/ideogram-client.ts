@@ -73,9 +73,17 @@ export class IdeogramClient {
   }
 
   async generateImage(params: IdeogramGenerateParams): Promise<IdeogramResponse> {
-    try {
-      // 参照画像がURLとして提供されている場合
-      let formData: any = undefined;
+     // デフォルト値を補完（未指定なら 1:1 & V_3）
+     if (!params.aspect_ratio) {
+       params.aspect_ratio = 'ASPECT_1_1';
+     }
+     if (!params.model) {
+       params.model = 'V_3';
+     }
+
+     try {
+       // 参照画像がURLとして提供されている場合
+       let formData: any = undefined;
       let requestConfig: any = {
         headers: {
           'Api-Key': this.apiKey,
