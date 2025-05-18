@@ -51,7 +51,10 @@ export async function generateImageHandler(ideogramClient: IdeogramClient, args:
     params.style_reference = styleRef;
   }
 
-  const response = await ideogramClient.generateImage(params, outputDir, baseFilename);
+  // blur_maskオプション受け取り
+  const blurMask = args.blur_mask === true;
+
+  const response = await ideogramClient.generateImage(params, outputDir, baseFilename, blurMask);
 
   return {
     content: [
