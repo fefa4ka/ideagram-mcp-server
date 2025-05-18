@@ -34,6 +34,8 @@ export interface IdeogramResponse {
     id: string;
     filepath?: string;
   }>;
+  /** 画像生成に使用したリクエストパラメータ */
+  request?: Record<string, unknown>;
 }
 
 export class IdeogramClient {
@@ -160,7 +162,11 @@ export class IdeogramClient {
       const updatedData = await Promise.all(downloadPromises);
       response.data.data = updatedData;
 
-      return response.data;
+      const result: IdeogramResponse = {
+        ...response.data,
+        request: { ...params }
+      };
+      return result;
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const detail = typeof error.response?.data === 'string'
