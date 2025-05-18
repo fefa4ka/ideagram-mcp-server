@@ -80,6 +80,14 @@ export const generateImageInputSchema = {
           description: "Whether to use a random style from Ideogram's library"
         }
       }
+    },
+    output_dir: {
+      type: "string",
+      description: "Directory to save generated images (default: 'docs')."
+    },
+    base_filename: {
+      type: "string",
+      description: "Base filename for saved images (default: 'ideogram-image'). Timestamp and image ID will be appended automatically."
     }
   },
   required: ["prompt"]

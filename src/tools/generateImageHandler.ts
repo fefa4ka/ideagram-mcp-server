@@ -10,6 +10,14 @@ export async function generateImageHandler(ideogramClient: IdeogramClient, args:
     );
   }
 
+  // 保存先ディレクトリとファイル名のデフォルト設定
+  const outputDir = typeof args.output_dir === "string" && args.output_dir.trim() !== ""
+    ? args.output_dir
+    : "docs";
+  const baseFilename = typeof args.base_filename === "string" && args.base_filename.trim() !== ""
+    ? args.base_filename
+    : "ideogram-image";
+
   const params: IdeogramGenerateParams = {
     prompt: args.prompt,
     aspect_ratio: typeof args.aspect_ratio === "string" ? args.aspect_ratio : undefined,
@@ -43,7 +51,7 @@ export async function generateImageHandler(ideogramClient: IdeogramClient, args:
     params.style_reference = styleRef;
   }
 
-  const response = await ideogramClient.generateImage(params);
+  const response = await ideogramClient.generateImage(params, outputDir, baseFilename);
 
   return {
     content: [
