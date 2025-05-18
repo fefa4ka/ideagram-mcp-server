@@ -1,5 +1,7 @@
 <p align="center">
 
+![](docs/ideogram-image_2025-05-18T06-31-45-777Z.png)
+
 # 🎨 Ideogram MCP Server
 
 </p>
@@ -388,3 +390,6 @@ MIT
 ### 詳細情報
 
 デプロイの詳細な手順や設定については [デプロイドキュメント](./docs/npm-deploy.md) を参照してください。
+
+
+![](assets/header-animation.svg)
