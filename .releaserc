@@ -5,8 +5,11 @@
       "@semantic-release/commit-analyzer",
       {
         "preset": "conventionalcommits",
+        "releaseRules": [
+          { "release": "patch" }
+        ],
         "parserOpts": {
-          "headerPattern": "^(?:[\\p{Emoji_Presentation}\\p{Extended_Pictographic}]+\\s*)?(\\w*)(?:\\((.*)\\))?!?:\\s*(.*)$",
+          "headerPattern": "^(?:[\\p{Emoji_Presentation}\\p{Extended_Pictographic}]+\\s*)?(\\w*)(?:\\((.*)\\)|\\s+#\\d+)?!?:\\s*(.*)$",
           "headerCorrespondence": ["type", "scope", "subject"]
         },
         "defaultReleaseType": "patch"
