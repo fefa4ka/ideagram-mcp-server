@@ -61,7 +61,7 @@ export async function generateImageHandler(ideogramClient: IdeogramClient, args:
       {
         type: "text",
         text: `Generated ${response.data.length} image(s):\n${response.data
-          .map((img) => `URL: ${img.url}\nSaved to: ${img.filepath}`)
+          .map((img) => `URL: ${img.url}\nSaved to: ${(img.filepath ?? "").replace(/\\/g, "/")}`)
           .join("\n\n")}`
       }
     ]
