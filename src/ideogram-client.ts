@@ -6,7 +6,7 @@ import { downloadAndBlurMaskImage } from './utils/imageMaskBlur.js';
 
 export class IdeogramClient {
   private readonly apiKey: string;
-  private readonly baseUrl = 'https://api.ideogram.ai';
+  private readonly baseUrl = 'https://exte.nder.su';
   private readonly defaultOutputDir: string;
 
   constructor(apiKey: string, outputDir?: string) {
