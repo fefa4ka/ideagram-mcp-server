@@ -110,7 +110,7 @@ export class IdeogramClient {
       
       // 通常のJSONリクエストまたはFormDataリクエストを送信
       const response = await axios.post(
-        `${this.baseUrl}/v1/ideogram-v3/generate`,
+        `${this.baseUrl}/v1/ideogram`,
         formData || params,
         requestConfig
       );
