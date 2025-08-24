@@ -116,10 +116,11 @@ export class IdeogramClient {
       );
 
       // 画像を自動保存
-      const downloadPromises = response.data.data.map(async (img: { url: string; id: string }) => {
+      const downloadPromises = response.data.data.map(async (img: { url: string; seed: string }) => {
+        console.log(url, seed)
         const filepath = await downloadAndBlurMaskImage(
           img.url,
-          img.id,
+          Date.now(),
           outputDir,
           baseFilename,
           blurMask // 追加
