@@ -73,7 +73,7 @@ export class IdeogramClient {
        let formData: any = undefined;
       let requestConfig: any = {
         headers: {
-          'Bearer': this.apiKey,
+          'Authorization: Bearer ': this.apiKey,
           'Content-Type': 'application/json',
         },
       };
